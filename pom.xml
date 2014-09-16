@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.ldap</groupId>
-	<artifactId>jon-ldap</artifactId>
+	<groupId>com.hippagriff</groupId>
+	<artifactId>hippagriff</artifactId>
 	<version>1.0</version>
 	<packaging>war</packaging>
-	<name>LDAP Application</name>
+	<name>Hippagriff Java API</name>
 
 	<properties>
 		<spring.version>3.1.1.RELEASE</spring.version>
@@ -14,6 +14,8 @@
 		<hibernate.version>4.1.1.Final</hibernate.version>
 		<local.tomcat.port>8091</local.tomcat.port>
 		<apache.ds.version>2.0.0-M17</apache.ds.version>
+		<hazelcast.version>3.2.5</hazelcast.version>
+		<mariadb.version>1.1.7</mariadb.version>
 	</properties>
 
 	<repositories>
@@ -22,10 +24,14 @@
 			<name>JBoss Public Maven Repository Group</name>
 			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
 		</repository>
+		<repository>
+			<id>codelds</id>
+			<url>https://code.lds.org/nexus/content/groups/main-repo</url>
+		</repository>
 	</repositories>
 
 	<build>
-		<finalName>jon-ldap-${project.version}</finalName>
+		<finalName>hippagriff-${project.version}</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<resources>
 			<resource>
@@ -53,14 +59,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.2</version>
-				<configuration>
-					<webResources>
-						<resource>
-							<directory>${project.reporting.outputDirectory}/wsdocs</directory>
-							<targetPath>api</targetPath>
-						</resource>
-					</webResources>
-				</configuration>
 			</plugin>
 
 
@@ -107,9 +105,9 @@
 				<!-- in order to use tomcat connection pooling -->
 				<dependencies>
 					<dependency>
-						<groupId>com.oracle</groupId>
-						<artifactId>ojdbc6</artifactId>
-						<version>11.2.0.3</version>
+						<groupId>org.mariadb.jdbc</groupId>
+						<artifactId>mariadb-java-client</artifactId>
+						<version>${mariadb.version}</version>
 					</dependency>
 				</dependencies>
 				<executions>
@@ -143,9 +141,14 @@
 
 		<!-- Database Libraries -->
 		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc6</artifactId>
-			<version>11.2.0.3</version>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>1.1.7</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.32</version>
 		</dependency>
 		<!-- End Database Libraries -->
 
@@ -229,12 +232,6 @@
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		<!-- for OAuth 2.0 -->
-		<dependency>
-			<groupId>org.springframework.security.oauth</groupId>
-			<artifactId>spring-security-oauth2</artifactId>
-			<version>2.0.1.RELEASE</version>
-		</dependency>
 		<!-- end security dependencies -->
 
 		<!-- Resteasy Dependencies -->
@@ -270,6 +267,13 @@
 			<groupId>org.apache.directory.server</groupId>
 			<artifactId>apacheds-all</artifactId>
 			<version>${apache.ds.version}</version>
+		</dependency>
+
+		<!-- Hazelcast Cache Layer -->
+		<dependency>
+			<groupId>com.hazelcast</groupId>
+			<artifactId>hazelcast</artifactId>
+			<version>${hazelcast.version}</version>
 		</dependency>
 
 		<!-- logging -->

@@ -3,16 +3,16 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-	<display-name>Jon LDAP Services</display-name>
+	<display-name>Hippagriff Java API</display-name>
 
 	<context-param>
 		<param-name>resteasy.servlet.mapping.prefix</param-name>
-		<param-value>/ldap</param-value>
+		<param-value>/hippagriff</param-value>
 	</context-param>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			/WEB-INF/ldap-context.xml
+			/WEB-INF/hippagriff-context.xml
 		</param-value>
 	</context-param>
 		
@@ -28,7 +28,7 @@
 
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/ldap/*</url-pattern>
+		<url-pattern>/hippagriff/*</url-pattern>
 	</filter-mapping>
 
 	<filter-mapping>
@@ -52,7 +52,7 @@
 
 	<servlet-mapping>
 		<servlet-name>Resteasy</servlet-name>
-		<url-pattern>/ldap/*</url-pattern>
+		<url-pattern>/hippagriff/*</url-pattern>
 	</servlet-mapping>
 
 	<session-config>
