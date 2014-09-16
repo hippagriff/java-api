@@ -103,18 +103,22 @@
 	<!-- Note that "beans" definitions MUST BE LAST -->
 	<!-- ************************** -->
 	<beans profile="local">
-		<jdbc:embedded-database id="dataSource" type="HSQL">
-		</jdbc:embedded-database>
-
+	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/hippagriff" />
 		<context:property-placeholder
 			location="classpath:properties/base.properties,classpath:properties/local.properties" />
-	</beans>
-
+		</beans>
+	
+	<!-- ************************** -->
+	<!-- Custom environment setup -->
+	<!-- Note that "beans" definitions MUST BE LAST -->
+	<!-- ************************** -->
 	<beans profile="test">
 		<!-- deployed test environment configurations -->
-		<jee:jndi-lookup id="dataSource" jndi-name="jdbc/hippagriff" />
-		<context:property-placeholder
+		<jdbc:embedded-database id="dataSource" type="HSQL">
+		</jdbc:embedded-database>
+	<context:property-placeholder
 			location="classpath:properties/base.properties,classpath:properties/test.properties" />
+	
 	</beans>
 
 	<beans profile="production">

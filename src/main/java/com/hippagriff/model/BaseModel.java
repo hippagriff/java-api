@@ -15,19 +15,19 @@ import com.hippagriff.ldap.config.LDAPCommonService;
 /**
  * Base entity for all models that contains CRUD operations
  * 
- * @author jon
+ * @author jon,smitha
  */
 @MappedSuperclass
 public abstract class BaseModel
 {
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATE_DATE_TIME")
-    private Date createDateTime;
+    @Column(name = "CREATED_DATE")
+    private Date createDate;
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "UPDATE_DATE_TIME")
-    private Date updateDateTime;
+    @Column(name = "UPDATED_DATE")
+    private Date updateDate;
 
     @Column(name = "CREATE_SOURCE", nullable = false, length = 50)
     private String createdBy;
@@ -35,27 +35,34 @@ public abstract class BaseModel
     @Column(name = "UPDATE_SOURCE", nullable = false, length = 50)
     private String updatedBy;
 
-    public Date getCreateDateTime()
-    {
-        return createDateTime;
-    }
+    @Column(name = "STATUS", nullable = true, length = 1)
+    private boolean status;
 
-    public void setCreateDateTime(Date createDateTime)
-    {
-        this.createDateTime = createDateTime;
-    }
+    public Date getCreateDate() {
+		return createDate;
+	}
 
-    public Date getUpdateDateTime()
-    {
-        return updateDateTime;
-    }
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
 
-    public void setUpdateDateTime(Date updateDateTime)
-    {
-        this.updateDateTime = updateDateTime;
-    }
+	public Date getUpdateDate() {
+		return updateDate;
+	}
 
-    public String getCreatedBy()
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public String getCreatedBy()
     {
         return createdBy;
     }
@@ -77,7 +84,7 @@ public abstract class BaseModel
 
     public boolean isNew()
     {
-        return (getCreateDateTime() == null);
+        return (getCreateDate() == null);
     }
 
     @PrePersist
@@ -87,9 +94,9 @@ public abstract class BaseModel
         String createdBy = LDAPCommonService.getCurrentHost();
         Date now = LDAPCommonService.getNow();
 
-        if (getCreateDateTime() == null)
+        if (getCreateDate() == null)
         {
-            setCreateDateTime(now);
+            setCreateDate(now);
         }
 
         if (getCreatedBy() == null)
@@ -97,7 +104,7 @@ public abstract class BaseModel
             setCreatedBy(createdBy);
         }
 
-        setUpdateDateTime(now);
+        setUpdateDate(now);
         setUpdatedBy(createdBy);
 
     }
