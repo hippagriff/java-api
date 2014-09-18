@@ -26,7 +26,7 @@
 		create-session="never">
 <!-- 		<sec:intercept-url pattern="/hippagriff/**"
 			access="ROLE_API_APPLICATION_USER" /> -->
-		<sec:intercept-url pattern="/hippagriff/**"
+		<sec:intercept-url pattern="/**"
 			access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<sec:custom-filter position="FORM_LOGIN_FILTER"
 			ref="authenticationProcessFilter" />
