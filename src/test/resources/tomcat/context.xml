@@ -24,8 +24,8 @@
 
 	<Resource name="jdbc/hippagriff" auth="Container" type="javax.sql.DataSource"
 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-		driverClassName="org.mariadb.jdbc.Driver"
-		url="jdbc:mysql://adminKIXyvf5:ARuR46alfXu8@localhost:3307/v1"
+		driverClassName="org.mysql.jdbc.Driver"
+		url="jdbc:mysql://adminKIXyvf5:ARuR46alfXu8@127.7.48.2:3306/v1"
 	 validationQuery="SELECT 'validationQuery' FROM dual"
 		jdbcInterceptors="StatementFinalizer" />
 
