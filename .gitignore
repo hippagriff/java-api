@@ -4,3 +4,6 @@
 .settings/
 .metadata/
 target/
+target
+.settings/*
+!.settings/.jsdtscope
