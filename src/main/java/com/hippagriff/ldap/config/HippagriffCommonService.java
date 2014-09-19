@@ -12,16 +12,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * Common functionality for LDAP functionality.
+ * Common functionality for functionality within the project.
  * 
  * @author jon
  * 
  */
 @Component
-public class LDAPCommonService
+public class HippagriffCommonService
 {
     @SuppressWarnings("unused")
-    private static final Logger logger = LoggerFactory.getLogger(LDAPCommonService.class);
+    private static final Logger logger = LoggerFactory.getLogger(HippagriffCommonService.class);
 
     private static final String DEFAULT_HOST = "unknown host";
 

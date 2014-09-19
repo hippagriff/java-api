@@ -22,11 +22,24 @@
 	<!-- <Valve className="org.apache.catalina.valves.CometConnectionManagerValve" 
 		/> -->
 
-	<Resource name="jdbc/hippagriff" auth="Container" type="javax.sql.DataSource"
+<!-- 	<Resource name="jdbc/hippagriff" auth="Container" type="javax.sql.DataSource"
 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-		driverClassName="org.mysql.jdbc.Driver"
-		url="jdbc:mysql://adminKIXyvf5:ARuR46alfXu8@127.7.48.2:3306/v1"
+		driverClassName="com.mysql.jdbc.Driver"
+		
+		url="jdbc:mysql://adminkeuXP4U:7tJvztHDgMjH@localhost:3307/hippagriffapi"
 	 validationQuery="SELECT 'validationQuery' FROM dual"
 		jdbcInterceptors="StatementFinalizer" />
+		 -->
+		<Resource name="jdbc/hippagriff"
+              url="jdbc:mysql://localhost:3307/hippagriffapi"
+              driverClassName="com.mysql.jdbc.Driver"
+              username="adminkeuXP4U"
+              password="7tJvztHDgMjH"
+              auth="Container"
+              type="javax.sql.DataSource"
+              maxActive="20"
+              maxIdle="5"
+              maxWait="10000"
+              />
 
 </Context>

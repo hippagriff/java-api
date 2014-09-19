@@ -64,26 +64,26 @@ public class AuthenticationProcessFilter extends UsernamePasswordAuthenticationF
         logger.debug("Attempting authentication.");
 
         Authentication authResult;
-        try
-        {
-            authResult = attemptAuthentication(request, response);
-            if (authResult == null)
-            {
-                // return immediately as subclass has indicated that it hasn't completed authentication
-                return;
-            }
-
-            logger.debug("Authentication succesful");
-
-            // Set the authentication object in context for validating authorizations
-            SecurityContextHolder.getContext().setAuthentication(authResult);
-        }
-        catch (AuthenticationException failed)
-        {
-            // Authentication failed
-            unsuccessfulAuthentication(request, response, failed);
-            return;
-        }
+//        try
+//        {
+//            authResult = attemptAuthentication(request, response);
+//            if (authResult == null)
+//            {
+//                // return immediately as subclass has indicated that it hasn't completed authentication
+//                return;
+//            }
+//
+//            logger.debug("Authentication succesful");
+//
+//            // Set the authentication object in context for validating authorizations
+//            SecurityContextHolder.getContext().setAuthentication(authResult);
+//        }
+//        catch (AuthenticationException failed)
+//        {
+//            // Authentication failed
+//            unsuccessfulAuthentication(request, response, failed);
+//            return;
+//        }
 
         // Continue further processing of the spring filter chain...
         chain.doFilter(request, response);

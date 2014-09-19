@@ -10,24 +10,24 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
-import com.hippagriff.ldap.config.LDAPCommonService;
+import com.hippagriff.ldap.config.HippagriffCommonService;
 
 /**
  * Base entity for all models that contains CRUD operations
  * 
- * @author jon
+ * @author jon,smitha
  */
 @MappedSuperclass
 public abstract class BaseModel
 {
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATE_DATE_TIME")
-    private Date createDateTime;
+    @Column(name = "CREATED_DATE")
+    private Date createDate;
 
     @Version
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "UPDATE_DATE_TIME")
-    private Date updateDateTime;
+    @Column(name = "UPDATED_DATE")
+    private Date updateDate;
 
     @Column(name = "CREATE_SOURCE", nullable = false, length = 50)
     private String createdBy;
@@ -35,24 +35,37 @@ public abstract class BaseModel
     @Column(name = "UPDATE_SOURCE", nullable = false, length = 50)
     private String updatedBy;
 
-    public Date getCreateDateTime()
+    @Column(name = "ACTIVE", nullable = true, length = 1)
+    private boolean active;
+
+    public Date getCreateDate()
     {
-        return createDateTime;
+        return createDate;
     }
 
-    public void setCreateDateTime(Date createDateTime)
+    public void setCreateDate(Date createDate)
     {
-        this.createDateTime = createDateTime;
+        this.createDate = createDate;
     }
 
-    public Date getUpdateDateTime()
+    public Date getUpdateDate()
     {
-        return updateDateTime;
+        return updateDate;
     }
 
-    public void setUpdateDateTime(Date updateDateTime)
+    public void setUpdateDate(Date updateDate)
     {
-        this.updateDateTime = updateDateTime;
+        this.updateDate = updateDate;
+    }
+
+    public boolean isActive()
+    {
+        return active;
+    }
+
+    public void setActive(boolean active)
+    {
+        this.active = active;
     }
 
     public String getCreatedBy()
@@ -77,19 +90,19 @@ public abstract class BaseModel
 
     public boolean isNew()
     {
-        return (getCreateDateTime() == null);
+        return (getCreateDate() == null);
     }
 
     @PrePersist
     @PreUpdate
     public void updateCRUD()
     {
-        String createdBy = LDAPCommonService.getCurrentHost();
-        Date now = LDAPCommonService.getNow();
+        String createdBy = HippagriffCommonService.getCurrentHost();
+        Date now = HippagriffCommonService.getNow();
 
-        if (getCreateDateTime() == null)
+        if (getCreateDate() == null)
         {
-            setCreateDateTime(now);
+            setCreateDate(now);
         }
 
         if (getCreatedBy() == null)
@@ -97,7 +110,7 @@ public abstract class BaseModel
             setCreatedBy(createdBy);
         }
 
-        setUpdateDateTime(now);
+        setUpdateDate(now);
         setUpdatedBy(createdBy);
 
     }

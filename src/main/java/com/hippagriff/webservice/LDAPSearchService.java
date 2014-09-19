@@ -1,5 +1,6 @@
 package com.hippagriff.webservice;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -57,6 +58,29 @@ public class LDAPSearchService extends BaseService
 
         return rb.build();
     }
+    
+    
+    @GET
+    @Path("/test")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response test(@QueryParam("q") String searchTerm)
+    {
+        ResponseBuilder rb = Response.status(Response.Status.INTERNAL_SERVER_ERROR);
+        try
+        {
+            HashMap<String,String> testDTO = new HashMap<String,String>();
+            
+            testDTO.put("Welcome", "to the API");
+            rb.status(Response.Status.OK).entity(testDTO);
+        }
+        catch (Exception ex)
+        {
+            handleException(rb, ex);
+        }
+
+        return rb.build();
+    }
+
 
     /**
      * Fetch a user that exists in the LDAP server that matches the provided userName (uid)
