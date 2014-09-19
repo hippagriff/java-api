@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hippagriff.patients.businessservices.PatientSearchBusinessService;
-import com.hippagriff.patients.dto.PatientDTO;
 import com.hippagriff.patients.dto.PatientSearchRequestDTO;
+import com.hippagriff.patients.dto.PatientSearchResultDTO;
 
 /**
  * API for exceuting different patient searches.
@@ -51,7 +51,9 @@ public class PatientSearchService extends BaseService
         try
         {
             PatientSearchRequestDTO searchRequestDTO = buildSearchRequestDTO(firstName, lastName, mrn);
-            List<PatientDTO> searchResults = patientSearchBusinessService.getPatients(searchRequestDTO);
+           // List<PatientDTO> searchResults = patientSearchBusinessService.getPatients(searchRequestDTO);
+            List<PatientSearchResultDTO> searchResults = patientSearchBusinessService.getPatientSearchResults(searchRequestDTO);
+            
             rb.status(Response.Status.OK).entity(searchResults);
         }
         catch (Exception ex)
