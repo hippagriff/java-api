@@ -3,7 +3,7 @@ package com.hippagriff.patients.dto;
 import java.util.Date;
 
 /**
- * DTO for a a search result for a user that exists in the LDAP server.
+ * DTO for a {@link PatientSystem}
  * 
  * @author jon
  * 

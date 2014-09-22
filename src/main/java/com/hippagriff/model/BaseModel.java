@@ -8,6 +8,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import com.hippagriff.ldap.config.HippagriffCommonService;
@@ -20,24 +21,18 @@ import com.hippagriff.ldap.config.HippagriffCommonService;
 @MappedSuperclass
 public abstract class BaseModel
 {
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATED_DATE")
     private Date createDate;
 
-    @Version
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "UPDATED_DATE")
     private Date updateDate;
 
-    @Column(name = "CREATE_SOURCE", nullable = false, length = 50)
     private String createdBy;
 
-    @Column(name = "UPDATE_SOURCE", nullable = false, length = 50)
     private String updatedBy;
 
-    @Column(name = "ACTIVE", nullable = true, length = 1)
     private boolean active;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CREATED_DATE")
     public Date getCreateDate()
     {
         return createDate;
@@ -48,6 +43,9 @@ public abstract class BaseModel
         this.createDate = createDate;
     }
 
+    @Version
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "UPDATED_DATE")
     public Date getUpdateDate()
     {
         return updateDate;
@@ -58,6 +56,7 @@ public abstract class BaseModel
         this.updateDate = updateDate;
     }
 
+    @Column(name = "ACTIVE", nullable = true, length = 1)
     public boolean isActive()
     {
         return active;
@@ -68,6 +67,7 @@ public abstract class BaseModel
         this.active = active;
     }
 
+    @Column(name = "CREATE_SOURCE", nullable = false, length = 50)
     public String getCreatedBy()
     {
         return createdBy;
@@ -78,6 +78,7 @@ public abstract class BaseModel
         this.createdBy = createdBy;
     }
 
+    @Column(name = "UPDATE_SOURCE", nullable = false, length = 50)
     public String getUpdatedBy()
     {
         return updatedBy;
@@ -88,6 +89,7 @@ public abstract class BaseModel
         this.updatedBy = updatedBy;
     }
 
+    @Transient
     public boolean isNew()
     {
         return (getCreateDate() == null);

@@ -1,127 +1,149 @@
 package com.hippagriff.patients.dto;
 
 import java.util.Date;
-import java.util.List;
-
-import com.hippagriff.organization.dto.OrganizationDTO;
 
 /**
- * Patient Search results are captured in this Object. Conforms to FHIR Patient specification
+ * DTO for a a search result for a user that exists in the LDAP server.
  * 
- * @author Smitha
+ * @author jon
+ * 
  */
 public class PatientSearchResultDTO
 {
+    private String id;
 
-    private String resourceType;
-    private List<PatientIdentifierDTO> identifier;
-    private List<PatientNameDTO> name;
-    private List<PatientTelecomDTO> telecom;
-    private List<PatientGenderDTO> gender;
-    private Date birthDate;
-    private boolean deceasedBoolean;
-    private List<PatientAddressDTO> address;
-    private List<PatientContactDTO> contact;
-    private OrganizationDTO managingOrganization;
+    private String firstName;
 
-    public String getResourceType()
+    private String lastName;
+
+    private String middleName;
+
+    private String organizationId;
+
+    private Date dateOfBirth;
+
+    private String gender;
+
+    private String suffix;
+
+    private String prefix;
+
+    private String mpi;
+
+    private String mrn;
+
+    public PatientSearchResultDTO()
     {
-        return resourceType;
+        // do nothing here
     }
 
-    public void setResourceType(String resourceType)
+    public String getId()
     {
-        this.resourceType = resourceType;
+        return id;
     }
 
-    public List<PatientIdentifierDTO> getIdentifier()
+    public void setId(String id)
     {
-        return identifier;
+        this.id = id;
     }
 
-    public void setIdentifier(List<PatientIdentifierDTO> identifier)
+    public String getFirstName()
     {
-        this.identifier = identifier;
+        return firstName;
     }
 
-    public List<PatientNameDTO> getName()
+    public void setFirstName(String firstName)
     {
-        return name;
+        this.firstName = firstName;
     }
 
-    public void setName(List<PatientNameDTO> name)
+    public String getLastName()
     {
-        this.name = name;
+        return lastName;
     }
 
-    public List<PatientTelecomDTO> getTelecom()
+    public void setLastName(String lastName)
     {
-        return telecom;
+        this.lastName = lastName;
     }
 
-    public void setTelecom(List<PatientTelecomDTO> telecom)
+    public String getMiddleName()
     {
-        this.telecom = telecom;
+        return middleName;
     }
 
-    public List<PatientGenderDTO> getGender()
+    public void setMiddleName(String middleName)
+    {
+        this.middleName = middleName;
+    }
+
+    public String getOrganizationId()
+    {
+        return organizationId;
+    }
+
+    public void setOrganizationId(String organizationId)
+    {
+        this.organizationId = organizationId;
+    }
+
+    public Date getDateOfBirth()
+    {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth)
+    {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getGender()
     {
         return gender;
     }
 
-    public void setGender(List<PatientGenderDTO> gender)
+    public void setGender(String gender)
     {
         this.gender = gender;
     }
 
-    public Date getBirthDate()
+    public String getSuffix()
     {
-        return birthDate;
+        return suffix;
     }
 
-    public void setBirthDate(Date birthDate)
+    public void setSuffix(String suffix)
     {
-        this.birthDate = birthDate;
+        this.suffix = suffix;
     }
 
-    public boolean isDeceasedBoolean()
+    public String getPrefix()
     {
-        return deceasedBoolean;
+        return prefix;
     }
 
-    public void setDeceasedBoolean(boolean deceasedBoolean)
+    public void setPrefix(String prefix)
     {
-        this.deceasedBoolean = deceasedBoolean;
+        this.prefix = prefix;
     }
 
-    public List<PatientAddressDTO> getAddress()
+    public String getMpi()
     {
-        return address;
+        return mpi;
     }
 
-    public void setAddress(List<PatientAddressDTO> address)
+    public void setMpi(String mpi)
     {
-        this.address = address;
+        this.mpi = mpi;
     }
 
-    public List<PatientContactDTO> getContact()
+    public String getMrn()
     {
-        return contact;
+        return mrn;
     }
 
-    public void setContact(List<PatientContactDTO> contact)
+    public void setMrn(String mrn)
     {
-        this.contact = contact;
+        this.mrn = mrn;
     }
-
-    public OrganizationDTO getManagingOrganization()
-    {
-        return managingOrganization;
-    }
-
-    public void setManagingOrganization(OrganizationDTO managingOrganization)
-    {
-        this.managingOrganization = managingOrganization;
-    }
-
 }

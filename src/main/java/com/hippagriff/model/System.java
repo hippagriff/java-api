@@ -21,19 +21,17 @@ public class System extends com.hippagriff.model.BaseModel implements Serializab
 {
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "system_id")
     private String systemId;
 
-    // bi-directional one-to-one association to Patient_System
-    @OneToOne(mappedBy = "system", fetch = FetchType.LAZY)
     private PatientSystem patientSystem;
 
     public System()
     {
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "system_id")
     public String getSystemId()
     {
         return this.systemId;
@@ -44,6 +42,8 @@ public class System extends com.hippagriff.model.BaseModel implements Serializab
         this.systemId = systemId;
     }
 
+    // bi-directional one-to-one association to Patient_System
+    @OneToOne(mappedBy = "system", fetch = FetchType.LAZY)
     public PatientSystem getPatientSystem()
     {
         return this.patientSystem;

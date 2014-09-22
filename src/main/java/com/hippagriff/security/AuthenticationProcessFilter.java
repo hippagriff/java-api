@@ -1,7 +1,6 @@
 package com.hippagriff.security;
 
 import java.io.IOException;
-import java.util.Enumeration;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -64,26 +62,26 @@ public class AuthenticationProcessFilter extends UsernamePasswordAuthenticationF
         logger.debug("Attempting authentication.");
 
         Authentication authResult;
-//        try
-//        {
-//            authResult = attemptAuthentication(request, response);
-//            if (authResult == null)
-//            {
-//                // return immediately as subclass has indicated that it hasn't completed authentication
-//                return;
-//            }
-//
-//            logger.debug("Authentication succesful");
-//
-//            // Set the authentication object in context for validating authorizations
-//            SecurityContextHolder.getContext().setAuthentication(authResult);
-//        }
-//        catch (AuthenticationException failed)
-//        {
-//            // Authentication failed
-//            unsuccessfulAuthentication(request, response, failed);
-//            return;
-//        }
+        try
+        {
+            authResult = attemptAuthentication(request, response);
+            if (authResult == null)
+            {
+                // return immediately as subclass has indicated that it hasn't completed authentication
+                return;
+            }
+
+            logger.debug("Authentication succesful");
+
+            // Set the authentication object in context for validating authorizations
+            SecurityContextHolder.getContext().setAuthentication(authResult);
+        }
+        catch (AuthenticationException failed)
+        {
+            // Authentication failed
+            unsuccessfulAuthentication(request, response, failed);
+            return;
+        }
 
         // Continue further processing of the spring filter chain...
         chain.doFilter(request, response);
@@ -91,38 +89,6 @@ public class AuthenticationProcessFilter extends UsernamePasswordAuthenticationF
         return;
     }
 
-    /**
-     * Extract username value from Request Header params
-     */
-    protected String obtainUsername(HttpServletRequest request)
-    {
-        String token = null;
-
-        @SuppressWarnings("unchecked")
-        Enumeration<String> tokenHeader = request.getHeaders(USERNAME_PARAMETER);
-        if (tokenHeader.hasMoreElements())
-        {
-            token = tokenHeader.nextElement();
-        }
-        return token;
-    }
-
-    /**
-     * Extract password value from Request header params
-     */
-    protected String obtainPassword(HttpServletRequest request)
-    {
-        String token = null;
-
-        @SuppressWarnings("unchecked")
-        Enumeration<String> tokenHeader = request.getHeaders(PASSWORD_PARAMETER);
-        if (tokenHeader.hasMoreElements())
-        {
-            token = tokenHeader.nextElement();
-        }
-        return token;
-    }
-    
     /*
      * (non-Javadoc)
      * 
@@ -137,20 +103,6 @@ public class AuthenticationProcessFilter extends UsernamePasswordAuthenticationF
     {
         logger.debug("Unsuccessful authentication");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    }
-
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException
-    {
-        String userName = obtainUsername(request);
-        String password = obtainPassword(request);
-
-        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userName, password);
-
-        setDetails(request, authRequest);
-
-        return this.getAuthenticationManager().authenticate(authRequest);
     }
 
     /**

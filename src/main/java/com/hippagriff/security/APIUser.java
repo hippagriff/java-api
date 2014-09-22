@@ -8,6 +8,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.hippagriff.dto.UserDTO;
+import com.hippagriff.model.Person;
+import com.hippagriff.model.User;
 
 /**
  * Customized Spring UserDetails implementation.
@@ -37,6 +39,21 @@ public class APIUser implements UserDetails
             setUserName(userDTO.getUserName());
             setFirstName(userDTO.getFirstName());
             setLastName(userDTO.getLastName());
+        }
+    }
+    
+
+    public APIUser(User user)
+    {
+        if (user != null)
+        {
+            setUserName(user.getUserName());
+            if(user.getPrimaryPerson() != null)
+            {
+                Person person = user.getPrimaryPerson();
+                setFirstName(person.getFirstName());
+                setLastName(person.getLastName());
+            }
         }
     }
 
