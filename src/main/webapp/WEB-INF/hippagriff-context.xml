@@ -26,7 +26,8 @@
 		create-session="never">
 		<sec:intercept-url pattern="/**"
 			access="ROLE_API_APPLICATION_USER" />
-		<sec:http-basic />
+		<sec:custom-filter position="FORM_LOGIN_FILTER"
+			ref="authenticationProcessFilter" />
 	</sec:http>
 
 	<sec:authentication-manager alias="authenticationManager"
@@ -42,15 +43,11 @@
 		<property name="invalidateHttpSession" value="true" />
 	</bean>
 
-	<bean id="basicAuthenticationProcessFilter"
-		class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
+	<bean id="authenticationProcessFilter" class="com.hippagriff.security.AuthenticationProcessFilter">
+		<property name="filterProcessesUrl" value="/login" />
+		<property name="allowSessionCreation" value="false" />
 		<property name="authenticationManager" ref="authenticationManager" />
-		<property name="authenticationEntryPoint" ref="authenticationEntryPoint" />
-	</bean>
-
-	<bean id="authenticationEntryPoint"
-		class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
-		<property name="realmName" value="Hippagriff" />
+		<property name="postOnly" value="false" />
 	</bean>
 
 	<!-- ************************** -->
@@ -102,6 +99,27 @@
 
 	<!-- ************************** -->
 	<!-- end hibernate setup -->
+	<!-- ************************** -->
+
+
+	<!-- ************************** -->
+	<!-- Cache Implementation -->
+	<!-- ************************** -->
+
+	<bean id="cacheImpl" class="com.hippagriff.cache.HazelcastCacheImpl"
+		init-method="initializeCache" destroy-method="destroyCache">
+	</bean>
+
+	<bean class="com.hazelcast.config.Config">
+		<property name="networkConfig">
+			<bean class="com.hazelcast.config.NetworkConfig">
+				<property name="portAutoIncrement" value="false" />
+			</bean>
+		</property>
+	</bean>
+
+	<!-- ************************** -->
+	<!-- end Cache setup -->
 	<!-- ************************** -->
 
 

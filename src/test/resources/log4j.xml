@@ -56,14 +56,9 @@
 		name="org.hibernate.type">
 		set to trace level to Log all hibernate JDBC parameters
 		<priority value="warn" />
-	</category> -->
-	
-	<category
-		name="org.hibernate.ejb">
-		<priority value="trace" />
 	</category>
 	
-<!-- 	<category name="org.hibernate.cache">
+	<category name="org.hibernate.cache">
 		<priority value="debug" />
 	</category> -->
 	

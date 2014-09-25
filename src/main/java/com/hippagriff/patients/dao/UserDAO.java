@@ -39,6 +39,44 @@ public class UserDAO
     }
 
     /**
+     * Looks up an active {@link User} based on userId
+     * 
+     * @param userId
+     * @return
+     */
+    public User findActive(String userId)
+    {
+        if (isBlank(userId))
+        {
+            throw new IllegalArgumentException("userId cannot be null.");
+        }
+
+        StringBuilder jql = new StringBuilder();
+        jql.append("SELECT user ");
+        jql.append("FROM " + User.class.getName() + " user ");
+        jql.append("WHERE user.active = true ");
+        jql.append("AND user.userId = :userId ");
+
+        TypedQuery<User> searchQuery = getEntityManager().createQuery(jql.toString(), User.class);
+        searchQuery.setParameter("userId", userId);
+        User user = null;
+        try
+        {
+            user = searchQuery.getSingleResult();
+        }
+        catch (NonUniqueResultException nre)
+        {
+            throw new HippagriffDAOException("Multiple users found that match userId: " + userId, nre);
+        }
+        catch (Exception e)
+        {
+            throw new HippagriffDAOException("An error occurred searching for user!", e);
+        }
+
+        return user;
+    }
+
+    /**
      * Looks up a {@link User} based on username (not case-specific)
      * 
      * @param userName
@@ -70,7 +108,7 @@ public class UserDAO
         }
         catch (Exception e)
         {
-            throw new HippagriffDAOException("An error occurred searching for patients!", e);
+            throw new HippagriffDAOException("An error occurred searching for user!", e);
         }
 
         return user;

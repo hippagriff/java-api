@@ -8,6 +8,8 @@ package com.hippagriff.dto;
  */
 public class UserDTO
 {
+    private String userId;
+    
     private String firstName;
 
     private String lastName;
@@ -59,6 +61,16 @@ public class UserDTO
     public void setUserPassword(String userPassword)
     {
         this.userPassword = userPassword;
+    }
+
+    public String getUserId()
+    {
+        return userId;
+    }
+
+    public void setUserId(String userId)
+    {
+        this.userId = userId;
     }
 
 }

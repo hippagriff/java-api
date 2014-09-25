@@ -26,7 +26,7 @@ import com.hippagriff.ldap.model.dao.LDAPUserDAO;
  * @author jon
  */
 @Service
-@Path("/search")
+@Path("/ldap/search")
 public class LDAPSearchService extends BaseService
 {
     private static final Logger logger = LoggerFactory.getLogger(LDAPSearchService.class);

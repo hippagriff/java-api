@@ -1,4 +1,4 @@
-package com.ldap.model.dao;
+package com.hippagriff.dao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

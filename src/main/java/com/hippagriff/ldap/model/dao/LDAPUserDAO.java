@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.hippagriff.dto.UserDTO;
 import com.hippagriff.ldap.constants.LDAPConstants;
-import com.hippagriff.model.LDAPServicesException;
+import com.hippagriff.model.HippagriffServicesException;
 
 /**
  * DAO for executing search requests that relate to Users within the LDAP server.
@@ -127,11 +127,11 @@ public class LDAPUserDAO extends LDAPDAO
     {
         if (isBlank(userName))
         {
-            throw new LDAPServicesException("userName cannot be null.");
+            throw new HippagriffServicesException("userName cannot be null.");
         }
         if (isBlank(password))
         {
-            throw new LDAPServicesException("password cannot be null.");
+            throw new HippagriffServicesException("password cannot be null.");
         }
 
         SearchRequest searchRequest = buildUserAuthenticationRequest(userName, password);
@@ -155,7 +155,7 @@ public class LDAPUserDAO extends LDAPDAO
         {
             String errorMessage = "An error occurred fetching user by userName: " + userName;
             logger.error(errorMessage, e);
-            throw new LDAPServicesException(errorMessage, e);
+            throw new HippagriffServicesException(errorMessage, e);
         }
         return null;
     }
@@ -174,6 +174,7 @@ public class LDAPUserDAO extends LDAPDAO
             Attribute lastName = resultEntry.get(LDAPConstants.LDAP_ATTR_LASTNAME);
             Attribute firstName = resultEntry.get(LDAPConstants.LDAP_ATTR_FIRSTNAME);
             Attribute userName = resultEntry.get(LDAPConstants.LDAP_ATTR_USERNAME);
+            Attribute userId = resultEntry.get(LDAPConstants.LDAP_ATTR_USERID);
 
             if (firstName != null)
             {
@@ -190,12 +191,17 @@ public class LDAPUserDAO extends LDAPDAO
                 searchResult.setUserName(userName.getString());
             }
 
+            if (userId != null)
+            {
+                searchResult.setUserId(userId.getString());
+            }
+
         }
         catch (Exception e)
         {
             String errorMessage = "An error occurred transforming User Entry to DTO.";
             logger.error(errorMessage, e);
-            throw new LDAPServicesException(errorMessage, e);
+            throw new HippagriffServicesException(errorMessage, e);
         }
 
         return searchResult;

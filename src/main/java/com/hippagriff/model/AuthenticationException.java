@@ -3,13 +3,13 @@ package com.hippagriff.model;
 import javax.ws.rs.core.Response.Status;
 
 /**
- * Unexpected exceptions for LDAP services.
+ * Unexpected exceptions that would occur during authentication.
  * 
  * @author jon
  * 
  */
 @SuppressWarnings("serial")
-public class LDAPServicesException extends RuntimeException
+public class AuthenticationException extends RuntimeException
 {
 
     private Status status;
@@ -19,7 +19,7 @@ public class LDAPServicesException extends RuntimeException
      * 
      * @param message
      */
-    public LDAPServicesException(String message)
+    public AuthenticationException(String message)
     {
         super(message);
         status = Status.INTERNAL_SERVER_ERROR;
@@ -31,7 +31,7 @@ public class LDAPServicesException extends RuntimeException
      * @param message
      * @param cause
      */
-    public LDAPServicesException(String message, Throwable cause)
+    public AuthenticationException(String message, Throwable cause)
     {
         super(message, cause);
         status = Status.INTERNAL_SERVER_ERROR;
@@ -43,7 +43,7 @@ public class LDAPServicesException extends RuntimeException
      * @param status
      * @param message
      */
-    public LDAPServicesException(Status status, String message, Throwable cause)
+    public AuthenticationException(Status status, String message, Throwable cause)
     {
         super(message, cause);
         this.status = status;
@@ -55,7 +55,7 @@ public class LDAPServicesException extends RuntimeException
      * @param status
      * @param message
      */
-    public LDAPServicesException(Status status, String message)
+    public AuthenticationException(Status status, String message)
     {
         super(message);
         this.status = status;

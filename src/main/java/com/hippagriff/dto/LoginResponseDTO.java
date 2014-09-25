@@ -1,13 +1,17 @@
 package com.hippagriff.dto;
 
+import java.io.Serializable;
+
 /**
- * This DTO encapsulates all of the information required after a user succesfully authenticates and is logged in.
+ * This DTO encapsulates all of the information required after a user successfully authenticates and is logged in.
  * 
  * @author jon
  * 
  */
-public class LoginResponseDTO
+public class LoginResponseDTO implements Serializable
 {
+    private static final long serialVersionUID = -6079887002357692650L;
+
     private String userId;
 
     private String personId;
@@ -21,6 +25,8 @@ public class LoginResponseDTO
     private String userPassword;
 
     private Boolean forcePasswordReset;
+
+    private String authenticationToken;
 
     public LoginResponseDTO()
     {
@@ -77,4 +83,33 @@ public class LoginResponseDTO
         this.forcePasswordReset = forcePasswordReset;
     }
 
+    public String getUserId()
+    {
+        return userId;
+    }
+
+    public void setUserId(String userId)
+    {
+        this.userId = userId;
+    }
+
+    public String getPersonId()
+    {
+        return personId;
+    }
+
+    public void setPersonId(String personId)
+    {
+        this.personId = personId;
+    }
+
+    public String getAuthenticationToken()
+    {
+        return authenticationToken;
+    }
+
+    public void setAuthenticationToken(String authenticationToken)
+    {
+        this.authenticationToken = authenticationToken;
+    }
 }

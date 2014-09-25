@@ -16,6 +16,7 @@ public abstract class LDAPConstants
     // LDAP Attributes
     public static final String LDAP_ATTR_FULLNAME = "cn";
     public static final String LDAP_ATTR_LASTNAME = "sn";
+    public static final String LDAP_ATTR_USERID = "employeeNumber";
     public static final String LDAP_ATTR_FIRSTNAME = "givenName";
     public static final String LDAP_ATTR_USERNAME = "uid";
     public static final String LDAP_ATTR_PASSWORD = "userPassword";

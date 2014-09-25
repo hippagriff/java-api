@@ -1,5 +1,6 @@
 package com.hippagriff.patients.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -8,8 +9,10 @@ import java.util.Date;
  * @author jon
  * 
  */
-public class PatientSearchResultDTO
+public class PatientSearchResultDTO  implements Serializable
 {
+    private static final long serialVersionUID = 1286544550561223606L;
+
     private String id;
 
     private String firstName;
