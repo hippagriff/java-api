@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import com.hippagriff.fhir.dto.PatientSearchResultFHIRDTO;
 import com.hippagriff.model.PatientSystem;
 import com.hippagriff.organization.dto.OrganizationDTO;
 import com.hippagriff.patients.dao.PatientDAO;
@@ -39,10 +40,10 @@ public class PatientSearchBusinessService
     @Autowired
     private PatientDAO patientDAO;
 
-    public List<PatientDTO> getPatients(PatientSearchRequestDTO searchRequestDTO)
+    public List<PatientSearchResultDTO> getPatients(PatientSearchRequestDTO searchRequestDTO)
     {
         Assert.notNull(searchRequestDTO);
-        List<PatientDTO> patientDTOs = new ArrayList<PatientDTO>();
+        List<PatientSearchResultDTO> patientDTOs = new ArrayList<PatientSearchResultDTO>();
 
         List<PatientSystem> patients = patientDAO.getPatients(searchRequestDTO);
 
@@ -69,7 +70,7 @@ public class PatientSearchBusinessService
             return patientDTOs;
         }
 
-        patientDTOs = transformPatientSystemToDTOs(patients);
+        patientDTOs = transformPatientSystemtoDTOs(patients);
 
         return patientDTOs;
 
@@ -82,13 +83,13 @@ public class PatientSearchBusinessService
      * @param patientSystems
      * @return {@link PatientDTO}s
      */
-    protected List<PatientDTO> transformPatientSystemtoDTOs(List<PatientSystem> patientSystems)
+    protected List<PatientSearchResultDTO> transformPatientSystemtoDTOs(List<PatientSystem> patientSystems)
     {
-        List<PatientDTO> patientDTOs = new ArrayList<PatientDTO>();
+        List<PatientSearchResultDTO> patientDTOs = new ArrayList<PatientSearchResultDTO>();
 
         for (PatientSystem patient : patientSystems)
         {
-            PatientDTO patientDTO = new PatientDTO();
+            PatientSearchResultDTO patientDTO = new PatientSearchResultDTO();
             patientDTO.setFirstName(patient.getPatientFirstName());
             patientDTO.setLastName(patient.getPatientLastName());
             patientDTO.setMiddleName(patient.getPatientMiddleName());
@@ -102,18 +103,18 @@ public class PatientSearchBusinessService
     }
 
     /**
-     * Transform a list of {@link PatientSystem}s to {@link PatientSearchResultDTO}s
+     * Transform a list of {@link PatientSystem}s to {@link PatientSearchResultFHIRDTO}s
      * 
      * @param patientSystems
      * @return {@link PatientDTO}s
      */
-    protected List<PatientSearchResultDTO> transformPatientSystemToDTOs(List<PatientSystem> patientSystems)
+    protected List<PatientSearchResultFHIRDTO> transformPatientSystemToDTOs(List<PatientSystem> patientSystems)
     {
-        List<PatientSearchResultDTO> patientDTOs = new ArrayList<PatientSearchResultDTO>();
+        List<PatientSearchResultFHIRDTO> patientDTOs = new ArrayList<PatientSearchResultFHIRDTO>();
 
         for (PatientSystem patient : patientSystems)
         {
-            PatientSearchResultDTO patientDTO = new PatientSearchResultDTO();
+            PatientSearchResultFHIRDTO patientDTO = new PatientSearchResultFHIRDTO();
             patientDTO.setAddress(null);
             patientDTO.setBirthDate(new Date());
             patientDTO.setContact(new ArrayList<PatientContactDTO>());

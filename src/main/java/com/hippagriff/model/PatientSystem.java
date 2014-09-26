@@ -23,51 +23,36 @@ public class PatientSystem extends com.hippagriff.model.BaseModel implements Ser
 {
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "patient_system_id")
     private String patientSystemId;
 
-    @Column(name = "patient_first_name")
     private String patientFirstName;
 
-    @Column(name = "patient_last_name")
     private String patientLastName;
 
-    @Column(name = "patient_middle_name")
     private String patientMiddleName;
 
-    @Column(name = "patient_mrn")
     private String patientMrn;
 
-    @Column(name = "patient_prefix_name")
     private String patientPrefixName;
 
-    @Column(name = "patient_suffix_name")
     private String patientSuffixName;
 
-    @Column(name = "system_id")
     private String systemId;
 
-    // bi-directional one-to-one association to System
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_system_id")
     private System system;
 
-    // bi-directional many-to-one association to Organization
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id")
     private Organization organization;
 
-    // bi-directional many-to-one association to Patient
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_mpi")
     private Patient patient;
 
     public PatientSystem()
     {
     }
 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "patient_system_id")
     public String getPatientSystemId()
     {
         return this.patientSystemId;
@@ -78,6 +63,7 @@ public class PatientSystem extends com.hippagriff.model.BaseModel implements Ser
         this.patientSystemId = patientSystemId;
     }
 
+    @Column(name = "patient_first_name")
     public String getPatientFirstName()
     {
         return this.patientFirstName;
@@ -88,6 +74,7 @@ public class PatientSystem extends com.hippagriff.model.BaseModel implements Ser
         this.patientFirstName = patientFirstName;
     }
 
+    @Column(name = "patient_last_name")
     public String getPatientLastName()
     {
         return this.patientLastName;
@@ -98,6 +85,7 @@ public class PatientSystem extends com.hippagriff.model.BaseModel implements Ser
         this.patientLastName = patientLastName;
     }
 
+    @Column(name = "patient_middle_name")
     public String getPatientMiddleName()
     {
         return this.patientMiddleName;
@@ -108,6 +96,7 @@ public class PatientSystem extends com.hippagriff.model.BaseModel implements Ser
         this.patientMiddleName = patientMiddleName;
     }
 
+    @Column(name = "patient_mrn")
     public String getPatientMrn()
     {
         return this.patientMrn;
@@ -118,6 +107,7 @@ public class PatientSystem extends com.hippagriff.model.BaseModel implements Ser
         this.patientMrn = patientMrn;
     }
 
+    @Column(name = "patient_prefix_name")
     public String getPatientPrefixName()
     {
         return this.patientPrefixName;
@@ -128,6 +118,7 @@ public class PatientSystem extends com.hippagriff.model.BaseModel implements Ser
         this.patientPrefixName = patientPrefixName;
     }
 
+    @Column(name = "patient_suffix_name")
     public String getPatientSuffixName()
     {
         return this.patientSuffixName;
@@ -138,6 +129,7 @@ public class PatientSystem extends com.hippagriff.model.BaseModel implements Ser
         this.patientSuffixName = patientSuffixName;
     }
 
+    @Column(name = "system_id")
     public String getSystemId()
     {
         return this.systemId;
@@ -148,6 +140,9 @@ public class PatientSystem extends com.hippagriff.model.BaseModel implements Ser
         this.systemId = systemId;
     }
 
+    // bi-directional one-to-one association to System
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_system_id")
     public System getSystem()
     {
         return this.system;
@@ -158,6 +153,9 @@ public class PatientSystem extends com.hippagriff.model.BaseModel implements Ser
         this.system = system;
     }
 
+    // bi-directional many-to-one association to Organization
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id")
     public Organization getOrganization()
     {
         return this.organization;
@@ -168,6 +166,9 @@ public class PatientSystem extends com.hippagriff.model.BaseModel implements Ser
         this.organization = organization;
     }
 
+    // bi-directional many-to-one association to Patient
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "patient_mpi")
     public Patient getPatient()
     {
         return this.patient;

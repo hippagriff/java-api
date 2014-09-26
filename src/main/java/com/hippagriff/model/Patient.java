@@ -21,19 +21,17 @@ public class Patient extends com.hippagriff.model.BaseModel implements Serializa
 {
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "patient_mpi")
     private String patientMpi;
 
-    // bi-directional many-to-one association to Patient_System
-    @OneToMany(mappedBy = "patient")
     private List<PatientSystem> patientSystems;
 
     public Patient()
     {
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "patient_mpi")
     public String getPatientMpi()
     {
         return this.patientMpi;
@@ -44,6 +42,9 @@ public class Patient extends com.hippagriff.model.BaseModel implements Serializa
         this.patientMpi = patientMpi;
     }
 
+
+    // bi-directional many-to-one association to Patient_System
+    @OneToMany(mappedBy = "patient")
     public List<PatientSystem> getPatientSystems()
     {
         return this.patientSystems;

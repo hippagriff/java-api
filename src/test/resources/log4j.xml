@@ -27,6 +27,7 @@
 		<priority value="warn" />
 	</category>
 
+
 	<category
 		name="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor">
 		<!-- set to trace level to see incoming request and response messages -->
@@ -38,28 +39,28 @@
 		<!-- set to debug level to help troubleshoot spring security -->
 		<priority value="warn"/>
 	</category>
-
+<!-- 
 	<category
 		name="org.hibernate.tool.hbm2ddl">
-		<!-- set to debug level to see hibernate auto DDL sql statements -->
+		set to debug level to see hibernate auto DDL sql statements
 		<priority value="debug" />
 	</category>
 
 	<category
 		name="org.hibernate.SQL">
-		<!-- set to debug level to see hibernate sql -->
+		set to debug level to see hibernate sql
 		<priority value="debug" />
 	</category>
 
 	<category
 		name="org.hibernate.type">
-		<!-- set to trace level to Log all hibernate JDBC parameters -->
+		set to trace level to Log all hibernate JDBC parameters
 		<priority value="warn" />
 	</category>
 	
 	<category name="org.hibernate.cache">
 		<priority value="debug" />
-	</category>
+	</category> -->
 	
 
 	<root>

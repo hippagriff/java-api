@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  * @author jon
  * 
  */
-@Service("resteasyServiceAuthenticationEntryPoint")
+@Service
 public class ResteasyServiceAuthenticationEntryPoint implements AuthenticationEntryPoint
 {
     @Override

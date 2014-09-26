@@ -24,19 +24,19 @@
 	<!-- ************************** -->
 	<sec:http entry-point-ref="resteasyServiceAuthenticationEntryPoint"
 		create-session="never">
-		<!-- <sec:intercept-url pattern="/hippagriff/**" access="ROLE_API_APPLICATION_USER" 
-			/> -->
 		<sec:intercept-url pattern="/**"
-			access="IS_AUTHENTICATED_ANONYMOUSLY" />
+			access="ROLE_API_APPLICATION_USER" />
 		<sec:custom-filter position="FORM_LOGIN_FILTER"
 			ref="authenticationProcessFilter" />
 	</sec:http>
 
-	<sec:authentication-manager alias="authenticationManager">
-		<sec:authentication-provider ref="ldapAuthenticationProvider" />
+	<sec:authentication-manager alias="authenticationManager"
+		erase-credentials="false">
+		<sec:authentication-provider ref="dbAuthenticationProvider" />
 	</sec:authentication-manager>
 
 	<bean id="ldapAuthenticationProvider" class="com.hippagriff.security.LDAPAuthenticationProvider" />
+	<bean id="dbAuthenticationProvider" class="com.hippagriff.security.DBAuthenticationProvider" />
 
 	<bean id="securityContextLogoutHandler"
 		class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler">
@@ -44,8 +44,12 @@
 	</bean>
 
 	<bean id="authenticationProcessFilter" class="com.hippagriff.security.AuthenticationProcessFilter">
+		<property name="filterProcessesUrl" value="/login" />
 		<property name="allowSessionCreation" value="false" />
+		<property name="usernameParameter" value="username" />
+		<property name="passwordParameter" value="password" />
 		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="postOnly" value="false" />
 	</bean>
 
 	<!-- ************************** -->
@@ -101,6 +105,27 @@
 
 
 	<!-- ************************** -->
+	<!-- Cache Implementation -->
+	<!-- ************************** -->
+
+	<bean id="cacheImpl" class="com.hippagriff.cache.HazelcastCacheImpl"
+		init-method="initializeCache" destroy-method="destroyCache">
+	</bean>
+
+	<bean class="com.hazelcast.config.Config">
+		<property name="networkConfig">
+			<bean class="com.hazelcast.config.NetworkConfig">
+				<property name="portAutoIncrement" value="false" />
+			</bean>
+		</property>
+	</bean>
+
+	<!-- ************************** -->
+	<!-- end Cache setup -->
+	<!-- ************************** -->
+
+
+	<!-- ************************** -->
 	<!-- Custom environment setup -->
 	<!-- Note that "beans" definitions MUST BE LAST -->
 	<!-- ************************** -->
@@ -112,17 +137,19 @@
 			location="classpath:properties/base.properties,classpath:properties/local.properties" />
 	</beans>
 
-	<!--  This bean is specific to an openshift deployment of the app.  It mirrors a "test" deployment, just with a specific datasource specified here. -->
+	<!-- This bean is specific to an openshift deployment of the app. It mirrors 
+		a "test" deployment, just with a specific datasource specified here. -->
 	<beans profile="openshift-test">
 		<!-- deployed test environment configurations -->
-		<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<bean id="dataSource"
+			class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 			<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
 			<property name="username" value="${OPENSHIFT_MYSQL_DB_USERNAME}"></property>
 			<property name="password" value="${OPENSHIFT_MYSQL_DB_PASSWORD}"></property>
 			<property name="url"
 				value="jdbc:mysql://${OPENSHIFT_MYSQL_DB_HOST}:${OPENSHIFT_MYSQL_DB_PORT}/${OPENSHIFT_APP_NAME}"></property>
 		</bean>
-	
+
 		<context:property-placeholder
 			location="classpath:properties/base.properties,classpath:properties/test.properties" />
 	</beans>

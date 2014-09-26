@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.hippagriff.ldap.constants.LDAPConstants;
 import com.hippagriff.ldap.server.LDAPServer;
-import com.hippagriff.model.LDAPServicesException;
+import com.hippagriff.model.HippagriffServicesException;
 
 /**
  * DAO for executing search requests that relate to Users within the LDAP server.
@@ -86,7 +86,7 @@ public class LDAPDAO
     {
         if (isLDAPConnected())
         {
-            throw new LDAPServicesException("LDAP Server not properly configured. Cannot execute request.");
+            throw new HippagriffServicesException("LDAP Server not properly configured. Cannot execute request.");
         }
         return ldapServer.getLdapConnection();
     }

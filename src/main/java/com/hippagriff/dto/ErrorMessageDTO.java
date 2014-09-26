@@ -11,11 +11,8 @@ public class ErrorMessageDTO
     /**
      * Constructor
      * 
-     * @param statusCode HTTP Status code
-     * @param errorCode Wellogic application error code.
-     * @param errorMessage Readable description of error
-     * @param identifier separate identifying string (e.g., a filename associated with error).
-     * @see WellogicErrorCodes
+     * @param statusCode
+     * @param errorMessage
      */
     public ErrorMessageDTO(int statusCode, String errorMessage)
     {
@@ -26,8 +23,7 @@ public class ErrorMessageDTO
     /**
      * Constructor
      * 
-     * @param errorMessage Readable description of error
-     * @see WellogicErrorCodes
+     * @param errorMessage
      */
     public ErrorMessageDTO(String errorMessage)
     {

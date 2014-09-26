@@ -1,6 +1,9 @@
 package com.hippagriff.security;
 
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
 import java.io.IOException;
+import java.util.Date;
 import java.util.Enumeration;
 
 import javax.servlet.FilterChain;
@@ -18,16 +21,26 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.stereotype.Component;
+
+import com.hippagriff.cache.CacheInterface;
 
 /**
  * Provides authentication mechanism that validates a passed in client token in the header of each request.
  * 
  * @author jon
  */
+@Component
 public class AuthenticationProcessFilter extends UsernamePasswordAuthenticationFilter implements LogoutHandler
 {
     @Autowired
-    private LDAPAuthenticationProvider ldapAuthentication;
+    private CacheInterface cacheImpl;
+
+    @Autowired
+    private AuthenticationPostProcessor authenticationPostProcessor;
+
+    @Autowired
+    private AuthenticationBusinessService authenticationBusinessService;
 
     public static String USERNAME_PARAMETER = "username";
     public static String PASSWORD_PARAMETER = "password";
@@ -40,55 +53,174 @@ public class AuthenticationProcessFilter extends UsernamePasswordAuthenticationF
     /**
      * Constructor used for unit testing.
      * 
-     * @param ldapAuthentication
+     * @param authenticationManager
+     * @param authenticationBusinessService
+     * @param authenticationPostProcessor
+     * @param cacheImpl
      */
-    public AuthenticationProcessFilter(LDAPAuthenticationProvider ldapAuthentication,
-            AuthenticationManager authenticationManager)
+    public AuthenticationProcessFilter(AuthenticationManager authenticationManager,
+            AuthenticationBusinessService authenticationBusinessService,
+            AuthenticationPostProcessor authenticationPostProcessor, CacheInterface cacheImpl)
     {
-        this.ldapAuthentication = ldapAuthentication;
         this.setAuthenticationManager(authenticationManager);
+        this.authenticationBusinessService = authenticationBusinessService;
+        this.authenticationPostProcessor = authenticationPostProcessor;
+        this.cacheImpl = cacheImpl;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * This method is responsible for determining what kind of authentication needs to be done. <br/>
+     * <ul>
+     * <li>
+     * The first scenario is a basic Login; where the user hits a specific login service with credentials present in the
+     * request headers to be authenticated. This service returns an authentication token that can be used to access the
+     * app further.</li>
+     * <li>
+     * The second scenario is when a user is attempting to hit a service directly (non-login) with the credentials
+     * specified in the request header. These credentials are authenticated, and then the user is passed onto the
+     * service they requested.</li>
+     * <li>
+     * The third scenario, is when the user passes a authentication token with their request as a query parameter. This
+     * token is fetched out of our cache and is validated to ensure this session still exists. Assuming the token is
+     * valid, the user is passed onto the service they requested.</li>
+     * </ul>
+     * <br/>
+     * Should any of these scenarios fail due to invalid credentials/token we return an HTTP Status 401.
      * 
-     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
-     * javax.servlet.FilterChain) Check whether the authentication token passed in as a uri request parameter is valid.
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
             ServletException
     {
-
         final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
+
         logger.debug("Attempting authentication.");
 
-        Authentication authResult;
-//        try
-//        {
-//            authResult = attemptAuthentication(request, response);
-//            if (authResult == null)
-//            {
-//                // return immediately as subclass has indicated that it hasn't completed authentication
-//                return;
-//            }
-//
-//            logger.debug("Authentication succesful");
-//
-//            // Set the authentication object in context for validating authorizations
-//            SecurityContextHolder.getContext().setAuthentication(authResult);
-//        }
-//        catch (AuthenticationException failed)
-//        {
-//            // Authentication failed
-//            unsuccessfulAuthentication(request, response, failed);
-//            return;
-//        }
+        Authentication authResult = null;
+        try
+        {
+            if (requiresAuthentication(request, response))
+            {
+
+                authResult = attemptAuthentication(request, response);
+                if (authResult == null)
+                {
+                    // return immediately as subclass has indicated that it hasn't completed authentication
+                    return;
+                }
+
+                successfulAuthentication(request, response, authResult);
+
+                return;
+            }
+            else if (checkHasUserNamePasswordHeaders(request))
+            {
+                logger.debug("Request is to process authentication for interface access");
+                try
+                {
+                    authResult = attemptAuthentication(request, response);
+                    if (authResult == null)
+                    {
+                        // return immediately as subclass has indicated that it hasn't completed authentication
+                        return;
+                    }
+                }
+                catch (AuthenticationException failed)
+                {
+                    // Authentication failed
+                    unsuccessfulAuthentication(request, response, failed);
+                    return;
+                }
+
+                successfulAuthentication(request, response, authResult);
+
+                // Continue further processing of the spring filter chain...
+                chain.doFilter(request, response);
+
+                return;
+            }
+
+        }
+        catch (AuthenticationException failed)
+        {
+            // Authentication failed
+            unsuccessfulAuthentication(request, response, failed);
+            return;
+        }
+
+        validateAuthenticationToken(request, response);
 
         // Continue further processing of the spring filter chain...
         chain.doFilter(request, response);
 
         return;
+    }
+
+    /**
+     * Extract the authenticationToken from the incoming {@link HttpServletRequest}, and validate that it exists in the
+     * cache.
+     * 
+     * @param request
+     * @param response
+     */
+    protected void validateAuthenticationToken(HttpServletRequest request, HttpServletResponse response)
+    {
+        // Get the token value by decoding the authToken value passed in request if present
+        String tokenValue = authenticationBusinessService.extractAuthToken(request);
+        if (isNotBlank(tokenValue))
+        {
+            // Get the cached authentication object corresponding to the authToken
+            Authentication authentication = cacheImpl.get(tokenValue);
+
+            APIUser apiUser = null;
+
+            if (authentication != null)
+            {
+                apiUser = (APIUser) authentication.getPrincipal();
+            }
+
+            // If the request token is still valid then continue with further processing of the request
+            if (isAuthTokenValid(apiUser))
+            {
+                // Set the authentication object in context for validating authorizations
+                authenticationBusinessService.setAuthenticationIntoContext(authentication);
+                // Update the expiry time to start from now
+                apiUser.setAuthenticationTokenExpiryDate(new Date());
+                // Update the authentication object in cache
+                cacheImpl.replace(tokenValue, authentication);
+            }
+            // If the client is valid and the authToken has expired delete the auth object from cache
+            else
+            {
+                // remove the stale authentication object from cache and invalidate the token
+                cacheImpl.remove(tokenValue);
+                authenticationBusinessService.removeAuthenticationTokenFromUsersList(apiUser, tokenValue);
+
+                // If the authToken is in-valid
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            }
+        }
+    }
+
+    /**
+     * Checks if this token is still valid for use based on a preset duration.
+     * 
+     * @return true/false
+     */
+    public boolean isAuthTokenValid(APIUser apiUser)
+    {
+        if (apiUser == null)
+        {
+            return false;
+        }
+        Boolean returnVal = true;
+        Long expireTime = (apiUser.getAuthenticationTokenExpiryDate().getTime() + AuthenticationBusinessService.AUTH_TOKEN_CACHE_MILLISECONDS);
+        Long currentTime = System.currentTimeMillis();
+        if (currentTime > expireTime)
+        {
+            returnVal = false;
+        }
+        return returnVal;
     }
 
     /**
@@ -122,7 +254,7 @@ public class AuthenticationProcessFilter extends UsernamePasswordAuthenticationF
         }
         return token;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -150,29 +282,35 @@ public class AuthenticationProcessFilter extends UsernamePasswordAuthenticationF
 
         setDetails(request, authRequest);
 
-        return this.getAuthenticationManager().authenticate(authRequest);
+        return getAuthenticationManager().authenticate(authRequest);
     }
 
     /**
-     * @return the ldapAuthentication
+     * @param request
+     * @return true if values for both 'username' and 'password' headers have been passed in from the request.
      */
-    public LDAPAuthenticationProvider getLDAPAuthentication()
+    public boolean checkHasUserNamePasswordHeaders(HttpServletRequest request)
     {
-        return ldapAuthentication;
+        String passwordHash = request.getHeader(getPasswordParameter());
+        String userNameHeader = request.getHeader(getUsernameParameter());
+        if (isNotBlank(passwordHash) && isNotBlank(userNameHeader))
+        {
+            return true;
+        }
+        return false;
     }
 
-    /**
-     * @param ldapAuthentication the ldapAuthentication to set
-     */
-    public void setLDAPAuthentication(LDAPAuthenticationProvider ldapAuthentication)
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+            Authentication authResult) throws ServletException, IOException
     {
-        this.ldapAuthentication = ldapAuthentication;
+        boolean isLogin = requiresAuthentication(request, response);
+        authenticationPostProcessor.postProcess(response, authResult, isLogin);
     }
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
     {
-        // No logout implementation for this environment.
         return;
     }
 }

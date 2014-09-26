@@ -1,15 +1,21 @@
 package com.hippagriff.dto;
 
+import java.io.Serializable;
+
 /**
- * DTO for a a search result for a user that exists in the LDAP server.
+ * This DTO encapsulates all of the information required after a user successfully authenticates and is logged in.
  * 
  * @author jon
  * 
  */
-public class UserDTO
+public class LoginResponseDTO implements Serializable
 {
+    private static final long serialVersionUID = -6079887002357692650L;
+
     private String userId;
-    
+
+    private String personId;
+
     private String firstName;
 
     private String lastName;
@@ -18,7 +24,11 @@ public class UserDTO
 
     private String userPassword;
 
-    public UserDTO()
+    private Boolean forcePasswordReset;
+
+    private String authenticationToken;
+
+    public LoginResponseDTO()
     {
         // do nothing here
     }
@@ -63,6 +73,16 @@ public class UserDTO
         this.userPassword = userPassword;
     }
 
+    public Boolean getForcePasswordReset()
+    {
+        return forcePasswordReset;
+    }
+
+    public void setForcePasswordReset(Boolean forcePasswordReset)
+    {
+        this.forcePasswordReset = forcePasswordReset;
+    }
+
     public String getUserId()
     {
         return userId;
@@ -73,4 +93,23 @@ public class UserDTO
         this.userId = userId;
     }
 
+    public String getPersonId()
+    {
+        return personId;
+    }
+
+    public void setPersonId(String personId)
+    {
+        this.personId = personId;
+    }
+
+    public String getAuthenticationToken()
+    {
+        return authenticationToken;
+    }
+
+    public void setAuthenticationToken(String authenticationToken)
+    {
+        this.authenticationToken = authenticationToken;
+    }
 }

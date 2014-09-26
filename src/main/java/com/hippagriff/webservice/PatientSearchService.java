@@ -51,9 +51,10 @@ public class PatientSearchService extends BaseService
         try
         {
             PatientSearchRequestDTO searchRequestDTO = buildSearchRequestDTO(firstName, lastName, mrn);
-           // List<PatientDTO> searchResults = patientSearchBusinessService.getPatients(searchRequestDTO);
-            List<PatientSearchResultDTO> searchResults = patientSearchBusinessService.getPatientSearchResults(searchRequestDTO);
-            
+            // List<PatientDTO> searchResults = patientSearchBusinessService.getPatients(searchRequestDTO);
+            List<PatientSearchResultDTO> searchResults = patientSearchBusinessService
+                    .getPatientSearchResults(searchRequestDTO);
+
             rb.status(Response.Status.OK).entity(searchResults);
         }
         catch (Exception ex)
@@ -80,7 +81,6 @@ public class PatientSearchService extends BaseService
         request.setMrn(mrn);
 
         return request;
-
     }
 
 }
